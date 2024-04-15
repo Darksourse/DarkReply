@@ -1,65 +1,29 @@
-# █ █ █ █▄▀ ▄▀█ █▀▄▀█ █▀█ █▀█ █ █
-# █▀█ █ █ █ █▀█ █ ▀ █ █▄█ █▀▄ █▄█
+# Модуль для Hikka
+# Позволяет использовать команды .reply и .answer
 
-# 🔒 Licensed under the GNU GPLv3
-# 🌐 https://www.gnu.org/licenses/agpl-3.0.html
-# 👤 https://t.me/hikamoru
+class ReplyAnswerModule:
+    def __init__(self):
+        self.replies = {}  # Словарь для хранения заданных текстов
 
-# meta developer: @hikamorumods
-# meta pic: https://te.legra.ph/file/7772a7dae6290f0a612a6.png
-# meta banner: https://raw.githubusercontent.com/AmoreForever/assets/master/Bull.jpg
+    def handle_message(self, message):
+        # Обработка входящего сообщения
+        if message.startswith(".reply "):
+            # Извлекаем текст после команды .reply
+            _, reply_text = message.split(" ", 1)
+            # Сохраняем текст в словаре
+            self.replies[message.chat_id] = reply_text
+            return "Текст успешно задан для ответа!"
+        elif message == ".answer":
+            # Отправляем сохраненный текст
+            if message.chat_id in self.replies:
+                return self.replies[message.chat_id]
+            else:
+                return "Текст для ответа не задан."
+        else:
+            return None  # Не обрабатываем другие сообщения
 
-import random
-from .. import loader, utils
-from ..inline.types import InlineCall
-from ..inline.types import InlineQuery
+# Создаем экземпляр модуля
+reply_answer_module = ReplyAnswerModule()
 
-
-
-bull1r = (
-                "Пися",
-                "Байден",
-                "Томат",
-                
-            )
-
-def bull1me():
-    iwfy = random.choice(bull1r)
-    return iwfy
-     
-@loader.tds
-class Bull1Mod(loader.Module):
-    """Bull1 пиз#а собеседнику"""
-
-    strings = {"name": "BullMod"}
-    
-    @loader.inline_everyone
-    async def bull1_inline_handler(self, query: InlineQuery):
-        """Забулить кого-то жесткими матами про мать"""
-        aoa = bull1me()
-        
-        btn_a = [{"text": "🌀 Random", "callback": self.bull1s}]
-
-        return {
-            "title": "Пошутить про маму",
-            "thumb": "https://te.legra.ph/file/b2a6c8d20e0034a534ac4.jpg",
-            "description": "Отправить...",
-            "message": f"<i>{aoa}</i>",
-            "reply_markup": btn_a,
-        }
-    
-    async def bull1cmd(self, message):
-        """Забулить кого-то жесткими матами про мать"""  
-        aoa = bull1me()
-        await utils.answer(message, aoa)
-    
-    async def bull1icmd(self, message):
-        """Забулить кого-то жесткими матами про мать (inline)""" 
-        aoa = bull1me()
-        await self.inline.form(
-            message=message,
-            text=aoa,
-            reply_markup=[
-                [{"text": "🌀 Random", "callback": self.bull1s}],
-            ]
-        )
+# Регистрируем его в Hikka
+hikka.register_module(reply_answer_module)
