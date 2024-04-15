@@ -1,6 +1,18 @@
 # Модуль для Hikka
 # Позволяет использовать команды .reply и .answer
 
+@loader.tds
+class ReplyAnswerModule(loader.Module):
+    """Create quotes"""
+
+    strings = {
+        "name": "ReplyAnswerModule",
+        "where_text": "<emoji document_id='6041914500272098262'>🚫</emoji> <b>Provide a text to create sticker with</b>",
+        "processing": (
+            "<emoji document_id='6318766236746384900'>🕔</emoji> <b>Processing...</b>"
+        ),
+    }
+
 class ReplyAnswerModule:
     def __init__(self):
         self.replies = {}  # Словарь для хранения заданных текстов
